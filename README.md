@@ -5,7 +5,7 @@ dsadasdasd
 First, run the development server:
 
 ```bash
-npm run devd
+npm run dev
 # or
 yarn dev
 # or
