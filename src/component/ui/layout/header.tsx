@@ -4,9 +4,7 @@ import { siteConfig } from "@/config/site.config";
 import { useRouter } from "next/navigation";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@heroui/react";
 import Link from 'next/link'
-import { useState } from "react";
-import RegistrationModal from "@/component/ui/modals/registration.modal";
-import LoginModal from "@/component/ui/modals/login.modal";
+
 
 export const Logo = () => {
   return (
@@ -169,9 +167,7 @@ ZnkAMjAyNS0wOS0xM1QxNDozMDo1OSswMDowMF9JbbQAAAAASUVORK5CYII=" />
 
 export default function App() {
  const router = useRouter();
-  const [isRegistrationOpen, setRegistrationOpen] = useState(false)
-  const [isLoginOpen, setLoginOpen] = useState(false)
-  const [isProfileModal, setProfileModal] = useState(false)
+
   
     const getNavItem = () => {
         return siteConfig.NavItems.map((item) => {
@@ -207,17 +203,15 @@ export default function App() {
           <Button onPress={() => router.push('/profile')}>Профиль</Button>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
-          <Button onPress={() => router.push("/login")} as={Link} color="primary" href="#" variant="ghost">Войти</Button>
+          <Button onPress={() => router.push("/login")} color="primary"  variant="ghost">Войти</Button>
         </NavbarItem>
         <NavbarItem className="hed2">
-          <Button onPress={() => router.push("/regiter")} as={Link}  color="primary" href="#" variant="ghost">
+          <Button onPress={() => router.push("/register")} color="primary"  variant="ghost">
             Зарегистироваться
           </Button>
         </NavbarItem>
       </NavbarContent>
-      <RegistrationModal isOpen={isRegistrationOpen} onClose={() => setRegistrationOpen(false)} />
 
-      <LoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
 
 
 
