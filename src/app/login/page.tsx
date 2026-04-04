@@ -14,7 +14,7 @@ export default function LoginPage(){
         router.push('/profile')
     } ;
     return(
-        <div className='logincard'>
+        <div className='logincard '>
             <h2 className='c'>Войти</h2>
             <div className='c'><input className='b' placeholder="email" onChange={e=>setEmail(e.target.value)}/></div>
             <div className='c'><input className='b' type="password" placeholder="password" onChange={e=>setPasword(e.target.value)} /></div>
