@@ -9,9 +9,10 @@ export default function LoginPage(){
     const [password,setPasword]=useState(''); 
     const  router = useRouter();
     const sumbit = async()=>{
-        const res = await api.post('/login',{email,password});
+        const res = await api.post('/auth/register',{email,password});
         saveToken(res.data.access_token);
         router.push('/profile')
+        console.log("sub")
     } ;
     return(
         <div className='logincard'>
