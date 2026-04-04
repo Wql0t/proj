@@ -207,10 +207,10 @@ export default function App() {
           <Button onPress={() => router.push('/profile')}>Профиль</Button>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
-          <Button onPress={() => setLoginOpen(true)} as={Link} color="primary" href="#" variant="ghost">Войти</Button>
+          <Button onPress={() => router.push("/login")} as={Link} color="primary" href="#" variant="ghost">Войти</Button>
         </NavbarItem>
         <NavbarItem className="hed2">
-          <Button onPress={() => setRegistrationOpen(true)} as={Link}  color="primary" href="#" variant="ghost">
+          <Button onPress={() => router.push("/regiter")} as={Link}  color="primary" href="#" variant="ghost">
             Зарегистироваться
           </Button>
         </NavbarItem>
