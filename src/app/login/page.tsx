@@ -20,17 +20,14 @@ export default function LoginPage(){
         
 
     } ;
-    const submit2 = async() => {
-        const res2 = await api.get('/test')
-        console.log(res2.data.status)
-    };
+
     return(
         <div className='logincard '>
             <h2 className='c'>Войти</h2>
             <div className='c'><input className='b' placeholder="email" onChange={e=>setEmail(e.target.value)}/></div>
             <div className='c'><input className='b' type="password" placeholder="password" onChange={e=>setPasword(e.target.value)} /></div>
            <div className='c'> <button className="btn" onClick={sumbit}>Подтвердить</button></div>
-           <div className='c'> <button className="btn" onClick={submit2}>Подтвердить</button></div>
+
         </div>
         
     );

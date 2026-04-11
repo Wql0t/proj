@@ -1,5 +1,6 @@
 "use client"
 import { Button } from "@heroui/react";
+import {api} from '@/lib/api';
 import {Card, CardBody, CardFooter, Image} from "@heroui/react";
 interface CartItem {
     title: string,
@@ -7,6 +8,9 @@ interface CartItem {
     imag: string
 }
 const Buy = () => {
+   const submit2 = async() => {
+        const res2 = await api.post('/buy', "")
+    };
     const list = [
     {
       title: "Апельсин",
@@ -48,24 +52,24 @@ const Buy = () => {
     return (
     <div className="mt-4 gap-3 grid grid-cols-2 sm:grid-cols-4">
       {list.map((item, index) => (
-        <Card  className="ggc" key={index} isPressable shadow="sm" onPress={() => AddToCart(item.title, item.price, item.img)}>
-          <CardBody className="overflow-visible p-0">
-            <Image
-              alt={item.title}
-              className="w-full object-cover h-[140px] mr-5"
-              radius="lg"
-              shadow="sm"
-              src={item.img}
-              width="100%"
-            />
-          </CardBody>
-          <p className="text-start ml-3 text-default-400 pt-2 mr-3">{item.title}</p>
-          <CardFooter className="text-small justify-between">
-            
-            <p className="text-default-500 pr-6">{item.price}</p>
-            
-          </CardFooter>
-        </Card>
+        <Card className="ggc" key={index} isPressable shadow="sm" onPress={() => console.log(item.title)}>
+                <CardBody className="overflow-visible p-0">
+                    <Image
+                        alt={item.title}
+                        className="w-full object-cover h-[140px]"
+                        radius="lg"
+                        shadow="sm"
+                        src={item.img}
+                        width="100%"
+                    />
+                </CardBody>
+                <p className="text-start mt-3 ml-3 cw">{item.title} </p>
+                <CardFooter className="text-small justify-between">
+            <Button color="primary" onClick={submit2} variant="ghost" className="mr-5">Купить</Button>
+
+                    <p className="text-default-500">{item.price}</p>
+                </CardFooter>
+            </Card>
       ))}
     </div>
   );

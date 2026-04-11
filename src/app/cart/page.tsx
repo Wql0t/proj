@@ -30,7 +30,7 @@ const Cart = () => {
                         width="100%"
                     />
                 </CardBody>
-                <p className="text-start mt-3 ml-3">{item.title} </p>
+                <p className="text-start mt-3 ml-3 cw">{item.title} </p>
                 <CardFooter className="text-small justify-between">
             <Button color="primary" onPress={() => DeleteCard(item.title)} variant="ghost" className="mr-5">Удалить</Button>
 

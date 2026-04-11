@@ -192,9 +192,9 @@ export default function App() {
   return (
     <Navbar style={{height: `${layoutConfig.headerHeight} `}} className="hed ggv">
       <NavbarBrand>
-        <p className="font-bold text-inherit">Sell&Buy</p>
+        <p className="font-bold text-inherit cw">Sell&Buy</p>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4 hed3">
+      <NavbarContent className="hidden sm:flex gap-4 hed3 cw">
        {getNavItem()}
       </NavbarContent>
       <NavbarContent justify="end">

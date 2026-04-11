@@ -43,6 +43,7 @@ body {
 
 .Topicc {
   font-size: 45px;
+  color: white;
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   padding-top: 340px;
   /* margin-right: 170px; */
@@ -73,6 +74,7 @@ body {
 }
 .c {
   padding: 20px;
+  color: white;
   text-align: center;
 }
 .b {
@@ -88,4 +90,7 @@ border-radius: 40px;
  width: 100%;
   background-color: #ffffff;
   color: #0a0a0a;
+}
+.cw {
+  color: white;
 }
