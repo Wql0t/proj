@@ -1,6 +1,7 @@
 "use client"
 import { Form, Input, Card, CardHeader, CardBody, Button, TableHeader, Table, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { useState } from "react";
+import {api} from '@/lib/api';
 
 interface User {
     name: string,
@@ -36,7 +37,11 @@ const AdminPanel = () => {
     email: '',
     role: 'user'
   })
-
+      const GetUsers = async() => {
+        const res2 = await api.get('/auth/getAll')
+        console.log(res2.data.status)
+        setUsers(res2.data.status)
+    };
     const [errors, setErrors] = useState<{[key: string]: string}>({})
 
   const validateEmail = (email: string) => {
@@ -143,7 +148,7 @@ const AdminPanel = () => {
                                     </select>
                                 </div>
 
-                                <Button color="primary" type="submit" className="w-full">
+                                <Button color="primary" type="submit" onClick={GetUsers} className="w-full">
                                     Добавить пользователя
                                 </Button>
 
@@ -159,23 +164,20 @@ const AdminPanel = () => {
                         <div className="">
                             <Table>
                                 <TableHeader>
-                                    <TableColumn className="font-semibold blackc">ИМЯ</TableColumn>
                                     <TableColumn className="font-semibold blackc">EMAIL</TableColumn>
                                     <TableColumn className="font-semibold blackc">РОЛЬ</TableColumn>
-                                    <TableColumn className="font-semibold blackc">ДАТА СОЗДАНИЯ</TableColumn>
                                     <TableColumn className="font-semibold blackc">ДЕЙСТВИЕ</TableColumn>
                                 </TableHeader>
                                 <TableBody>
                                     {users.map((user) => (
                                         <TableRow key={user.id}>
-                                            <TableCell className="blackc">{user.name}</TableCell>
                                             <TableCell className="blackc">{user.email}</TableCell>
                                             <TableCell>
                                                 <span className={`{${user.role === "admin" ? "bg-red-200 text-red-700" : user.role === "moderator" ? "bg-blue-200 text-blue-600" : "bg-blue-200 text-blue-600"}`}>
                                                     {user.role === 'admin' ? 'Администратор' : user.role === 'mod' ? 'Модератор' : 'Пользователь'}
                                                 </span>
                                             </TableCell>
-                                            <TableCell className="blackc">{user.createdAt}</TableCell>
+
                                             <TableCell>
                                                 <Button color="danger" size="sm" onPress={() => handleDeleteUser(user.id)}>
                                                 Удалить
