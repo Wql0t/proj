@@ -1,47 +1,42 @@
 "use client"
-import { Form, Input, Card, CardHeader, CardBody, Button, TableHeader, Table, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
-import { useState } from "react";
+import { Form, Input, Card, CardHeader, CardBody, Button, TableHeader, Table, TableColumn, TableBody, TableRow, TableCell, form } from "@heroui/react";
+import { useState, useEffect } from "react";
 import {api} from '@/lib/api';
 
 interface User {
-    name: string,
     email: string,
     role: string,
     id: string,
-    createdAt: string
+    password: string;
 }
 
 const AdminPanel = () => {
 
-    const [users, setUsers] = useState<User[]>([
-        {
-            id: '1',
-            name: 'Админ',
-            email: 'admin@gmail.com',
-            role: 'admin',
-            createdAt: new Date().toLocaleDateString()
-        },
-        {
-            id: '1',
-            name: '22',
-            email: 'gdfg@gmail.com',
-            role: 'user',
-            createdAt: new Date().toLocaleDateString()
-        }
-    ])
+    const [users, setUsers] = useState<User[]>([])
 
-
+    const [email,setEmail]=useState('');
+    const [password,setPasword]=useState(''); 
+    const [role, setRole]=useState('');
 
       const [formData, setFormData] = useState({
-    name: '',
+    password: '',
     email: '',
     role: 'user'
   })
-      const GetUsers = async() => {
+  useEffect(() => {const GetUsers = async() => {
         const res2 = await api.get('/auth/getAll')
         console.log(res2.data.status)
         setUsers(res2.data.status)
     };
+    GetUsers();
+},[])
+    const AddUser = async() => {
+        setEmail(formData.email)
+        setPasword(formData.password)
+        setRole(formData.role)
+       const res = await api.post('/auth/register',{email, password, role});
+    }
+      
     const [errors, setErrors] = useState<{[key: string]: string}>({})
 
   const validateEmail = (email: string) => {
@@ -52,8 +47,8 @@ const AdminPanel = () => {
   const validateForm = () => {
     const newErrors : {[key: string]: string} = {}
 
-    if(!formData.name.trim()) {
-        newErrors.name = "Имя обязательно"
+    if(!formData.password.trim()) {
+        newErrors.password = "Пароль обязателен"
     }
 
     if(!formData.email.trim()) {
@@ -77,15 +72,14 @@ const AdminPanel = () => {
 
     const newUser: User = {
         id: Date.now().toString(),
-        name: formData.name,
         email: formData.email,
         role: formData.role,
-        createdAt: new Date().toLocaleDateString()
+        password: formData.password
     }
 
     setUsers([...users, newUser])
 
-    setFormData({name: '', email: '', role: 'user'})
+    setFormData({email: '', role: 'user', password: ''})
 
     setErrors({})
   }
@@ -110,20 +104,6 @@ const AdminPanel = () => {
                         <Form className="w-full" onSubmit={handleSubmit}>
                             <div className="space-y-4">
                                 <Input 
-                                    label="Имя пользователя"
-                                    placeholder="Введите имя"
-                                    value={formData.name}
-                                    classNames={{
-                                        inputWrapper: 'bg-default-100',
-                                        input: 'text-sm text-black focus: outline-none',
-                                        label: 'text-black',
-                                        
-                                    }}
-                                    onChange={(e) => setFormData({...formData, name: e.target.value })}
-                                    isInvalid={!!errors.name}
-                                    errorMessage={errors.name}
-                                />
-                                <Input 
                                     label="Email"
                                     placeholder="Введите почту"
                                     value={formData.email}
@@ -136,6 +116,20 @@ const AdminPanel = () => {
                                     isInvalid={!!errors.email}
                                     errorMessage={errors.email}
                                 />
+                                <Input 
+                                    label="Пароль"
+                                    placeholder="Введите пароль"
+                                    value={formData.password}
+                                    classNames={{
+                                        inputWrapper: 'bg-default-100',
+                                        input: 'text-sm text-black focus: outline-none',
+                                        label: 'text-black',
+                                        
+                                    }}
+                                    onChange={(e) => setFormData({...formData, password: e.target.value })}
+                                    isInvalid={!!errors.name}
+                                    errorMessage={errors.name}
+                                />
                                 <div>
                                     <select
                                     value={formData.role}
@@ -144,11 +138,10 @@ const AdminPanel = () => {
                                     >
                                         <option value="user">Пользователь</option>
                                         <option value="admin">Админ</option>
-                                        <option value="mod">Модератор</option>
                                     </select>
                                 </div>
 
-                                <Button color="primary" type="submit" onClick={GetUsers} className="w-full">
+                                <Button color="primary" type="submit" onClick={AddUser} className="w-full">
                                     Добавить пользователя
                                 </Button>
 
