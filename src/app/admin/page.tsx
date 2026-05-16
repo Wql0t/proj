@@ -30,12 +30,14 @@ const AdminPanel = () => {
     };
     GetUsers();
 },[])
-    const AddUser = async() => {
-        setEmail(formData.email)
-        setPasword(formData.password)
-        setRole(formData.role)
-       const res = await api.post('/auth/register',{email, password, role});
-    }
+const AddUser = async() => {
+    const email = formData.email;
+    const password = formData.password;
+    const role = formData.role;
+    
+    const res = await api.post('/auth/register', { email, password, role });
+    console.log(res.data);
+}
       
     const [errors, setErrors] = useState<{[key: string]: string}>({})
 
@@ -141,7 +143,7 @@ const AdminPanel = () => {
                                     </select>
                                 </div>
 
-                                <Button color="primary" type="submit" onClick={AddUser} className="w-full">
+                                <Button color="primary"  onPress={AddUser} className="w-full">
                                     Добавить пользователя
                                 </Button>
 
