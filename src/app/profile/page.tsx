@@ -140,30 +140,7 @@ const profile = () => {
                     </CardBody>
                 </Card>
         </div>
-          <h2 className="text-xl font-semibold">Список ваших товаров</h2>
-           <div className="mt-4 gap-3 grid grid-cols-4 sm:grid-cols-10">
-                  
-                            
-                            {items.map((item: { title: string, price: string, imag: string }, index: number) => (
-            <Card className="ggc " key={index} isPressable shadow="sm" onPress={() => console.log(item.title)}>
-                <CardBody className="overflow-visible p-0">
-                    <Image
-                        alt={item.title}
-                        className="w-full object-cover h-[140px]"
-                        radius="lg"
-                        shadow="sm"
-                        src={item.imag}
-                        width="100%"
-                    />
-                </CardBody>
-                <p className="text-start mt-3 ml-3">{item.title} </p>
-                <CardFooter className="text-small justify-between">
-
-                    <p className="text-default-500">{item.price}</p>
-                </CardFooter>
-            </Card>
-        ))}
-                        </div>
+       
             </div>
      );
 }
