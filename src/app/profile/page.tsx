@@ -15,10 +15,8 @@ interface Item {
 }
  
 
-
-
 const profile = () => {
-     const cartJson = localStorage.getItem('cart')
+     const cartJson = typeof window !== 'undefined' ? localStorage.getItem('cart') : null;
     const items = cartJson ? JSON.parse(cartJson) : [];
        const [item, setItem] = useState<User[]>([
         {
@@ -28,23 +26,17 @@ const profile = () => {
             createdAt: new Date().toLocaleDateString()
         },
         {
-            id: '1',
+            id: '2',
             name: 'dfggfg',
             price: '43',
             createdAt: new Date().toLocaleDateString()
         }
     ])
 
-
-
       const [formData, setFormData] = useState({
     name: '',
     price: ''
   })
-
-
-
-
 
   const validateForm = () => {
     const newErrors : {[key: string]: string} = {}
@@ -56,8 +48,6 @@ const profile = () => {
     if(!formData.price.trim()) {
         newErrors.price = "Цена обязателена"
     } 
-
-
     
         return Object.keys(newErrors).length === 0
     }
@@ -92,7 +82,7 @@ const profile = () => {
                         <h2 className="text-xl font-semibold blackc">Добавить товар</h2>
                     </CardHeader>
                     <CardBody>
-                        <Form className="" >
+                        <form onSubmit={handleSubmit} className="">
                             <div className="space-y-4">
                                 <Input 
                                     label="Название"
@@ -126,25 +116,29 @@ const profile = () => {
                                 </Button>
 
                             </div>
-                        </Form>
+                        </form>
                     </CardBody>
                 </Card>
-                 <Card className="">
+                 <Card className="h-full">
                     <CardHeader>
                         <h2 className="text-xl font-semibold blackc">Итоговый доход</h2>
                     </CardHeader>
-                    <CardBody>
+                    <CardBody className="flex items-center justify-center p-0">
                         <div className="">
-                            <h1 className="blackc">729$</h1>
+                            <div className="flex items-baseline justify-center gap-1">
+                                <h1 className="text-7xl font-bold text-black tracking-tight">
+                                    729
+                                </h1>
+                                <span className="text-5xl text-gray-400 font-medium">$</span>
+                            </div>
+                            <div className="mt-4 flex justify-center gap-1">
+                                <div className="w-8 h-1 bg-green-500 rounded-full"></div>
+                                <div className="w-8 h-1 bg-gray-600 rounded-full"></div>
+                                <div className="w-8 h-1 bg-gray-600 rounded-full"></div>
+                            </div>
                         </div>
                     </CardBody>
                 </Card>
-                {/* <Card className="w-full bgm">
-                    <CardHeader> */}
-                        
-                    {/* </CardHeader>
-                    <CardBody> */}
-                     
         </div>
           <h2 className="text-xl font-semibold">Список ваших товаров</h2>
            <div className="mt-4 gap-3 grid grid-cols-4 sm:grid-cols-10">
@@ -170,9 +164,6 @@ const profile = () => {
             </Card>
         ))}
                         </div>
-                    {/* </CardBody> */}
-                {/* </Card> */}
-               
             </div>
      );
 }
