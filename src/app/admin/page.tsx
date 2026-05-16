@@ -95,7 +95,7 @@ const AdminPanel = () => {
                 <h1 className="text-3xl font-bold text-center mb-2.5">Админ панель</h1>
                 <p className="text-center">Управление пользователями системы</p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 place-items-center">
                 <Card className="w-full">
                     <CardHeader>
                         <h2 className="text-xl font-semibold blackc">Добавить пользователя</h2>
@@ -125,7 +125,7 @@ const AdminPanel = () => {
                                         input: 'text-sm text-black focus: outline-none',
                                         label: 'text-black',
                                         
-                                    }}
+                                    }} 
                                     onChange={(e) => setFormData({...formData, password: e.target.value })}
                                     isInvalid={!!errors.name}
                                     errorMessage={errors.name}

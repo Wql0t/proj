@@ -65,7 +65,7 @@ const Buy = () => {
                 </CardBody>
                 <p className="text-start mt-3 ml-3 cw">{item.title} </p>
                 <CardFooter className="text-small justify-between">
-            <Button color="primary" onClick={submit2} variant="ghost" className="mr-5">Купить</Button>
+            <Button color="primary" onPress={() => {AddToCart(item.title, item.price, item.img)}} variant="ghost" className="mr-5">Купить</Button>
 
                     <p className="text-default-500">{item.price}</p>
                 </CardFooter>
