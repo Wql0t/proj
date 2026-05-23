@@ -198,7 +198,7 @@ const Cart = () => {
                                 <Divider />
                                 <div className="flex justify-between text-xl font-bold text-gray-800">
                                     <span>К оплате</span>
-                                    <span className="text-primary">${getTotalPrice()}</span>
+                                    <span>${getTotalPrice()}</span>
                                 </div>
                             </div>
 
