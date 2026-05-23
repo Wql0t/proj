@@ -12,7 +12,7 @@ export default function LoginPage(){
         const res = await api.post('/auth/register',{email,password});
         saveToken(res.data.access_token);
         router.push('/profile')
-        console.log("sub")
+        console.log("Успешно")
     } ;
     return(
         <div className='logincard'>
