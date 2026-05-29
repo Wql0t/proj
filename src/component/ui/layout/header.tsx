@@ -1,9 +1,11 @@
 "use client"
 import { layoutConfig } from "@/config/layout.config";
 import { siteConfig } from "@/config/site.config";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@heroui/react";
 import Link from 'next/link'
+import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 
 
 export const Logo = () => {
@@ -167,10 +169,15 @@ ZnkAMjAyNS0wOS0xM1QxNDozMDo1OSswMDowMF9JbbQAAAAASUVORK5CYII=" />
 
 export default function App() {
  const router = useRouter();
+ const pathname = usePathname();
+ const [admin, setAdmin] = useState(false);
 
-  
+ useEffect(() => {
+   setAdmin(isAdmin());
+ }, [pathname]);
+
     const getNavItem = () => {
-        return siteConfig.NavItems.map((item) => {
+        return siteConfig.NavItems.filter((item) => !('adminOnly' in item && item.adminOnly) || admin).map((item) => {
             return (
                 <NavbarItem key={item.href}>
                     <Link href={item.href}
@@ -199,9 +206,11 @@ export default function App() {
       </NavbarContent>
       <NavbarContent justify="end">
 
+        {admin && (
         <NavbarItem>
           <Button onPress={() => router.push('/profile')}>Профиль</Button>
         </NavbarItem>
+        )}
         <NavbarItem className="hidden lg:flex">
           <Button onPress={() => router.push("/login")} color="primary"  variant="ghost">Войти</Button>
         </NavbarItem>

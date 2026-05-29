@@ -24,24 +24,15 @@ const AdminPanel = () => {
         email: '',
         role: 'user'
     })
+
+    const reloadUsers = async () => {
+        const res2 = await api.get('/auth/getAll');
+        setUsers(res2.data.status);
+    };
     
     useEffect(() => {
-        const GetUsers = async() => {
-            const res2 = await api.get('/auth/getAll')
-            console.log(res2.data.status)
-            setUsers(res2.data.status)
-        };
-        GetUsers();
+        reloadUsers();
     }, [])
-    
-    const AddUser = async() => {
-        const email = formData.email;
-        const password = formData.password;
-        const role = formData.role;
-        
-        const res = await api.post('/auth/register', { email, password});
-        console.log("Успешно");
-    }
       
     const [errors, setErrors] = useState<{[key: string]: string}>({})
 
@@ -72,37 +63,34 @@ const AdminPanel = () => {
         return Object.keys(newErrors).length === 0
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if(!validateForm()) {
             return
         }
 
-        const newUser: User = {
-            id: Date.now().toString(),
-            email: formData.email,
-            role: formData.role,
-            password: formData.password
-        }
+        const role = formData.role === 'mod' ? 'seller' : formData.role;
 
-        setUsers([...users, newUser])
+        await api.post('/auth/register', {
+            email: formData.email,
+            password: formData.password,
+            role,
+        });
+        await reloadUsers();
         setFormData({email: '', role: 'user', password: ''})
         setErrors({})
     }
 
     const handleDeleteUser = async(userId: string, email: string) => {
-        const res = await api.post('/auth/delete', { email});
-        console.log(res.data);
-        setUsers(users.filter(user => user.id !== userId))
-        
-
+        await api.post('/auth/delete', { email});
+        await reloadUsers();
     }
 
     const getRoleColor = (role: string) => {
         switch(role) {
             case 'admin':
                 return 'danger';
-            case 'mod':
+            case 'seller':
                 return 'warning';
             default:
                 return 'primary';
@@ -113,7 +101,7 @@ const AdminPanel = () => {
         switch(role) {
             case 'admin':
                 return <Shield size={14} />;
-            case 'mod':
+            case 'seller':
                 return <Shield size={14} />;
             default:
                 return <UserIcon size={14} />;
@@ -124,8 +112,8 @@ const AdminPanel = () => {
         switch(role) {
             case 'admin':
                 return 'Администратор';
-            case 'mod':
-                return 'Модератор';
+            case 'seller':
+                return 'Продавец';
             default:
                 return 'Пользователь';
         }
@@ -193,17 +181,16 @@ const AdminPanel = () => {
                                     >
                                         <option value="user">Пользователь</option>
                                         <option value="admin">Администратор</option>
-                                        <option value="mod">Модератор</option>
+                                        <option value="seller">Продавец</option>
                                     </select>
                                 </div>
 
                                 <Button 
                                     color="primary" 
-                                    onPress={AddUser} 
+                                    type="submit"
                                     className="w-full rounded-xl bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
                                     size="lg"
                                 >
-                                 
                                     Добавить пользователя
                                 </Button>
                             </div>
