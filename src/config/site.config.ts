@@ -1,5 +1,5 @@
 export const siteConfig = {
-    title: "SellAndBuy",
+    title: "Frutta",
     description: "приложение для продажи и покупки вещей",
     NavItems: [
         {href: '/buy', label: 'Товары'},

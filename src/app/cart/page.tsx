@@ -159,7 +159,7 @@ const Cart = () => {
                                     
                                     <CardFooter className="p-0 pt-2 flex justify-between items-center">
                                         <div>
-                                            <p className="text-2xl font-bold text-primary">{item.price}</p>
+                                            <p className="text-2xl font-bold text-gray-600">{item.price}</p>
                                             <p className="text-xs text-gray-400 line-through">
                                                 {item.price === "$8.50" ? "$10.99" : ""}
                                             </p>

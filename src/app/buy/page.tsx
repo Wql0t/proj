@@ -1,13 +1,113 @@
 "use client"
-import { Button, Card, CardBody, CardFooter, Image, Chip, Badge } from "@heroui/react";
+import { Button, Card, CardBody, CardFooter, Image, Chip } from "@heroui/react";
 import { api } from '@/lib/api';
-import { ShoppingCart, Eye, Star, TrendingUp } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { ShoppingCart, Star, TrendingUp } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 interface CartItem {
     title: string,
     price: string,
     imag: string
+}
+
+type AllergyRisk = 'low' | 'medium' | 'high';
+
+interface AllergyInfo {
+    level: AllergyRisk;
+    note: string;
+    triggers: string[];
+}
+
+interface Product {
+    title: string;
+    img: string;
+    price: string;
+    rating?: number;
+    reviews?: number;
+    inStock: boolean;
+    allergy?: AllergyInfo;
+}
+
+const ALLERGY_RISK: Record<AllergyRisk, { fill: string; title: string; hint: string }> = {
+    low: {
+        fill: 'bg-emerald-500',
+        title: 'Низкая вероятность реакции',
+        hint: 'Для большинства аллергиков обычно переносится без проблем',
+    },
+    medium: {
+        fill: 'bg-amber-400',
+        title: 'Возможны единичные реакции',
+        hint: 'У чувствительных людей иногда проявляется — стоит быть внимательнее',
+    },
+    high: {
+        fill: 'bg-red-500',
+        title: 'Выраженный риск для аллергиков',
+        hint: 'Часто вызывает перекрёстные и пищевые реакции — соблюдайте осторожность',
+    },
+};
+
+function AllergyIndicator({ allergy }: { allergy: AllergyInfo }) {
+    const risk = ALLERGY_RISK[allergy.level];
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const [open, setOpen] = useState(false);
+    const [coords, setCoords] = useState({ x: 0, y: 0 });
+
+    const updatePosition = useCallback(() => {
+        const el = triggerRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        setCoords({ x: rect.left + rect.width / 2, y: rect.top - 10 });
+    }, []);
+
+    const show = () => {
+        updatePosition();
+        setOpen(true);
+    };
+
+    const hide = () => setOpen(false);
+
+    const tooltip = open && typeof document !== 'undefined' && createPortal(
+        <div
+            role="tooltip"
+            style={{ left: coords.x, top: coords.y }}
+            className="fixed z-[9999] w-56 -translate-x-1/2 -translate-y-full rounded-lg bg-gray-900 text-white text-xs shadow-2xl p-3 pointer-events-none"
+        >
+            <p className="font-semibold text-sm leading-snug">{risk.title}</p>
+            <p className="text-gray-300 mt-1 leading-relaxed">{risk.hint}</p>
+            <p className="text-gray-400 mt-2 mb-1">Что может спровоцировать:</p>
+            <ul className="space-y-0.5 text-gray-200">
+                {allergy.triggers.map((t) => (
+                    <li key={t} className="before:content-['•'] before:mr-1.5 before:text-gray-500">
+                        {t}
+                    </li>
+                ))}
+            </ul>
+            {allergy.note && (
+                <p className="text-gray-400 mt-2 pt-2 border-t border-gray-700 leading-relaxed">
+                    {allergy.note}
+                </p>
+            )}
+            <span className="absolute left-1/2 top-full -translate-x-1/2 border-[6px] border-transparent border-t-gray-900" />
+        </div>,
+        document.body,
+    );
+
+    return (
+        <>
+            <button
+                ref={triggerRef}
+                type="button"
+                aria-label={risk.title}
+                onMouseEnter={show}
+                onMouseLeave={hide}
+                onFocus={show}
+                onBlur={hide}
+                className={`shrink-0 w-5 h-5 rounded-full border-[2.5px] border-white shadow-[0_1px_4px_rgba(0,0,0,0.45)] cursor-help transition-transform hover:scale-110 ${risk.fill}`}
+            />
+            {tooltip}
+        </>
+    );
 }
 
 const Buy = () => {
@@ -25,22 +125,32 @@ const Buy = () => {
         const res2 = await api.get('/buy/getProducts')
     };
 
-    const list = [
+    const list: Product[] = [
         {
             title: "Апельсин сладкий",
-            img: "https://foodcity.ru/storage/products/October2018/6XZSr6ddCl6cxfo0UchP.jpg",
+            img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRbffE9qjGqVo6w1N8VRKzsNvZl773pghIipPiY-QmjBXB4X3xzG_SsVoYE94sVlFWjJU6OeOKS0LB03tW7-yjsd48oIDx-KbLKb4QXhCNdGgad8Tzp-706",
             price: "$8.50",
             rating: 4.8,
             reviews: 124,
-            inStock: true
+            inStock: true,
+            allergy: {
+                level: 'medium',
+                note: 'Цитрусовые аллергены иногда пересекаются с пыльцой берёзы.',
+                triggers: ['Cit s 1 (лимонен)', 'Cit s 2 (профилин)', 'эфирные масла кожуры'],
+            },
         },
         {
             title: "Апельсин крупный",
-            img: "https://foodcity.ru/storage/products/October2018/6XZSr6ddCl6cxfo0UchP.jpg",
+            img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQiU14Sy4uvYZw1AeUE3Ht4_26-TsJt463bsxEVQ-wdfU1owZSuWLNhlVj5eA16jeGcg0Heg7Vmj1qYBxjM5CxxHHRs-gbN-h1wpPd9wGQw4_ROvy09AluQ",
             price: "$5.50",
             rating: 4.6,
             reviews: 89,
-            inStock: true
+            inStock: true,
+            allergy: {
+                level: 'low',
+                note: 'Реакции встречаются реже, чем на грейпфрут или мандарин.',
+                triggers: ['Cit s 1', 'флавоноиды мякоти'],
+            },
         },
         {
             title: "Яблоко красное",
@@ -48,23 +158,38 @@ const Buy = () => {
             price: "$5.50",
             rating: 4.9,
             reviews: 256,
-            inStock: true
+            inStock: true,
+            allergy: {
+                level: 'high',
+                note: 'Синдром «берёза–яблоко»: сырое яблоко часто не переносят аллергики на пыльцу.',
+                triggers: ['Mal d 1 (белок, родственный берёзе)', 'Mal d 3 (липидный переносчик)', 'пектин'],
+            },
         },
         {
             title: "Грейпфрут",
-            img: "https://foodcity.ru/storage/products/October2018/6XZSr6ddCl6cxfo0UchP.jpg",
+            img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTl4Ed6e7XMB8HuEnOQMzD2eJZ8aXoQENAlmssPdjE2RHTwU9iEU1FiocUCIy0asKkAyxTBKrOiOzoGRwB2o5kDdBgdJOzY7_O4zeAK285OD7RmRiijM0ePMg",
             price: "$7.90",
             rating: 4.7,
             reviews: 67,
-            inStock: true
+            inStock: true,
+            allergy: {
+                level: 'high',
+                note: 'Сочетание цитрусовых аллергенов и фурокумаринов усиливает чувствительность у части людей.',
+                triggers: ['Cit s 1', 'фурокумарины', 'нарингин (горький флавоноид)'],
+            },
         },
         {
             title: "Мандарины",
-            img: "https://foodcity.ru/storage/products/October2018/6XZSr6ddCl6cxfo0UchP.jpg",
+            img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTKoRm65MBx8ELa5Qr5A63aRP8C-typCkDLPVnrt4a5gH7xnZ6lTENJyCYvhaqxpDQn2s5wGrA-d4MY-9egjFg-njxnGTLSpeTs8t7YW9Q",
             price: "$6.50",
             rating: 4.5,
             reviews: 198,
-            inStock: false
+            inStock: false,
+            allergy: {
+                level: 'medium',
+                note: 'Тонкая кожура концентрирует эфирные масла — контакт с соком раздражает кожу.',
+                triggers: ['Cit s 1', 'Cit s 3 (липидный переносчик)', 'лимонная кислота'],
+            },
         },
     ];
 
@@ -115,7 +240,7 @@ const Buy = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {list.map((item, index) => (
                     <Card 
-                        className="group relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-2xl border-0" 
+                        className="group relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:z-10 rounded-2xl border-0" 
                         key={index} 
                         shadow="sm"
                     >
@@ -148,7 +273,14 @@ const Buy = () => {
                         
                         <div className="p-4">
                             <div className="mb-2">
-                                <h3 className="text-lg font-bold text-gray-800 line-clamp-1">{item.title}</h3>
+                                <div className="flex items-start justify-between gap-2">
+                                    <h3 className="text-lg font-bold text-gray-800 line-clamp-1 flex-1 min-w-0">
+                                        {item.title}
+                                    </h3>
+                                    {item.allergy && (
+                                        <AllergyIndicator allergy={item.allergy} />
+                                    )}
+                                </div>
 
                                 {item.rating && (
                                     <div className="flex items-center gap-1 mt-1">
@@ -161,7 +293,7 @@ const Buy = () => {
                             
                             <CardFooter className="p-0 pt-3 flex justify-between items-center">
                                 <div>
-                                    <p className="text-2xl font-bold text-orange-600">{item.price}</p>
+                                    <p className="text-2xl font-bold text-black">{item.price}</p>
                                  
                                 </div>
                                 <Button 

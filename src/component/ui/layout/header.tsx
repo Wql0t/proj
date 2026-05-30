@@ -176,46 +176,38 @@ export default function App() {
    setAdmin(isAdmin());
  }, [pathname]);
 
-    const getNavItem = () => {
-        return siteConfig.NavItems.filter((item) => !('adminOnly' in item && item.adminOnly) || admin).map((item) => {
-            return (
-                <NavbarItem key={item.href}>
-                    <Link href={item.href}
-                    className={` py-1
-                      color: white
-                    hover: border-black-300   hover: rounded-md
-                    transition-colors
-                    transition-border
-                    duration-200
-                    `}
-                    >
-                      {item.label}
-                    </Link>
-                </NavbarItem>
-            )
-        })
-    }
+    const visibleNavItems = siteConfig.NavItems.filter(
+        (item) => !('adminOnly' in item && item.adminOnly) || admin,
+    );
 
   return (
     <Navbar style={{height: `${layoutConfig.headerHeight} `}} className="hed ggv">
       <NavbarBrand>
-        <p className="font-bold text-inherit cw">Sell&Buy</p>
+        <p className="font-bold text-inherit cw">{siteConfig.title}</p>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4 hed3 cw">
-       {getNavItem()}
-      </NavbarContent>
-      <NavbarContent justify="end">
-
+      <NavbarContent justify="end" className="hidden sm:flex gap-4 sm:gap-6 cw">
+        {visibleNavItems.map((item) => (
+          <NavbarItem key={item.href}>
+            <Link
+              href={item.href}
+              className="py-1 text-white/90 hover:text-white transition-colors duration-200"
+            >
+              {item.label}
+            </Link>
+          </NavbarItem>
+        ))}
         {admin && (
-        <NavbarItem>
-          <Button onPress={() => router.push('/profile')}>Профиль</Button>
-        </NavbarItem>
+          <NavbarItem>
+            <Button onPress={() => router.push('/profile')}>Профиль</Button>
+          </NavbarItem>
         )}
         <NavbarItem className="hidden lg:flex">
-          <Button onPress={() => router.push("/login")} color="primary"  variant="ghost">Войти</Button>
+          <Button onPress={() => router.push("/login")} color="primary" variant="ghost">
+            Войти
+          </Button>
         </NavbarItem>
-        <NavbarItem className="hed2">
-          <Button onPress={() => router.push("/register")} color="primary"  variant="ghost">
+        <NavbarItem>
+          <Button onPress={() => router.push("/register")} color="primary" variant="ghost">
             Зарегистироваться
           </Button>
         </NavbarItem>
