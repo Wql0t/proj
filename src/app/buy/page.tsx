@@ -38,12 +38,12 @@ const ALLERGY_RISK: Record<AllergyRisk, { fill: string; title: string; hint: str
     medium: {
         fill: 'bg-amber-400',
         title: 'Возможны единичные реакции',
-        hint: 'У чувствительных людей иногда проявляется — стоит быть внимательнее',
+        hint: 'У чувствительных людей иногда проявляется - стоит быть внимательнее',
     },
     high: {
         fill: 'bg-red-500',
         title: 'Выраженный риск для аллергиков',
-        hint: 'Часто вызывает перекрёстные и пищевые реакции — соблюдайте осторожность',
+        hint: 'Часто вызывает перекрёстные и пищевые реакции - соблюдайте осторожность',
     },
 };
 
@@ -71,12 +71,12 @@ function AllergyIndicator({ allergy }: { allergy: AllergyInfo }) {
         <div
             role="tooltip"
             style={{ left: coords.x, top: coords.y }}
-            className="fixed z-[9999] w-56 -translate-x-1/2 -translate-y-full rounded-lg bg-gray-900 text-white text-xs shadow-2xl p-3 pointer-events-none"
+            className="fixed z-[9999] w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-full rounded-xl bg-gray-900 text-white shadow-2xl p-4 pointer-events-none"
         >
-            <p className="font-semibold text-sm leading-snug">{risk.title}</p>
-            <p className="text-gray-300 mt-1 leading-relaxed">{risk.hint}</p>
-            <p className="text-gray-400 mt-2 mb-1">Что может спровоцировать:</p>
-            <ul className="space-y-0.5 text-gray-200">
+            <p className="font-semibold text-base leading-snug">{risk.title}</p>
+            <p className="text-gray-300 text-[15px] mt-2 leading-relaxed">{risk.hint}</p>
+            <p className="text-gray-400 text-sm mt-3 mb-1.5">Что может спровоцировать:</p>
+            <ul className="space-y-1 text-[15px] text-gray-200 leading-snug">
                 {allergy.triggers.map((t) => (
                     <li key={t} className="before:content-['•'] before:mr-1.5 before:text-gray-500">
                         {t}
@@ -84,11 +84,11 @@ function AllergyIndicator({ allergy }: { allergy: AllergyInfo }) {
                 ))}
             </ul>
             {allergy.note && (
-                <p className="text-gray-400 mt-2 pt-2 border-t border-gray-700 leading-relaxed">
+                <p className="text-gray-400 text-[15px] mt-3 pt-3 border-t border-gray-700 leading-relaxed">
                     {allergy.note}
                 </p>
             )}
-            <span className="absolute left-1/2 top-full -translate-x-1/2 border-[6px] border-transparent border-t-gray-900" />
+            <span className="absolute left-1/2 top-full -translate-x-1/2 border-8 border-transparent border-t-gray-900" />
         </div>,
         document.body,
     );
